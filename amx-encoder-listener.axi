@@ -23,19 +23,23 @@ include 'amx-encoder-api'
 /*
  * --------------------
  * Device arrays
+ *
+ * Any components that are to be monitored should have the appropriate
+ * device array copied into the main program DEFINE_VARIABLE section and the 
+ * associated #DEFINE compiler directives should be copied to the top of the 
+ * main program, above the line of code that this include file is included 
+ * into the main program.
  * --------------------
  */
 
 define_variable
-
-#if_not_defined dvEncoderMainPorts
+/*
+#DEFINE INCLUDE_ENCODER_MONITOR_MAIN
 dev dvEncoderMainPorts[] = { 6001:1:0 }
-#end_if
 
-#if_not_defined dvEncoderUsbPorts
+#DEFINE INCLUDE_ENCODER_MONITOR_USB
 dev dvEncoderUsbPorts[] = { 6001:1:0, 6001:2:0 }
-#end_if
-
+*/
 
 
 
@@ -115,6 +119,7 @@ define_event
  * --------------------
  */
 
+#if_defined INCLUDE_ENCODER_MONITOR_MAIN
 data_event[dvEncoderMainPorts] // dvEncoderMainPorts should be the device (D:P:S) for port 1 on the Encoder or an array containing multiple devices for port 1 on multiple Encoders
 {
 	command:
@@ -155,8 +160,9 @@ data_event[dvEncoderMainPorts] // dvEncoderMainPorts should be the device (D:P:S
 		}
 	}
 }
+#end_if
 
-
+#if_defined INCLUDE_ENCODER_MONITOR_USB
 data_event[dvEncoderUsbPorts] // dvEncoderUsbPorts should be a DEV array containing devices for each USB port on the Encoder
 {
 	command:
@@ -183,6 +189,7 @@ data_event[dvEncoderUsbPorts] // dvEncoderUsbPorts should be a DEV array contain
 		}
 	}
 }
+#end_if
 
 /*
  * --------------------
@@ -190,7 +197,7 @@ data_event[dvEncoderUsbPorts] // dvEncoderUsbPorts should be a DEV array contain
  * --------------------
  */
 
-
+#if_defined INCLUDE_ENCODER_MONITOR_USB
 channel_event[dvEncoderUsbPorts,0]
 {
 	on:
@@ -222,6 +229,7 @@ channel_event[dvEncoderUsbPorts,0]
 		}
 	}
 }
+#end_if
 
 
 
